@@ -365,40 +365,40 @@ p0 = mci.get_initial_state(nwalkers)
 print("the maximized loglike",mci.logp(x))
 
 #--------------------------------------------------------------Sampling-------------------------------------------------------------------------------------#
-# Number of parameters
-# ndim = p0.shape[1]
+Number of parameters
+ndim = p0.shape[1]
 
-# # Instantiate the sampler
-# sampler = emcee.EnsembleSampler(nwalkers, ndim, mci.logp)
+# Instantiate the sampler
+sampler = emcee.EnsembleSampler(nwalkers, ndim, mci.logp)
 
-# # Run the chains
-# np.random.seed(0)
-# nsteps = 1000
-# state = sampler.run_mcmc(p0, nsteps, progress=True, store=True)
+# Run the chains
+np.random.seed(0)
+nsteps = 1000
+state = sampler.run_mcmc(p0, nsteps, progress=True, store=True)
 
-# max_n = 1000
-# n_inc = 1
+max_n = 1000
+n_inc = 1
 
-# # We'll track how the average autocorrelation time estimate changes
-# index = 0
-# ave_logp = np.empty(max_n)
+# We'll track how the average autocorrelation time estimate changes
+index = 0
+ave_logp = np.empty(max_n)
 
-# # Now we'll sample for up to max_n steps
-# for sample in sampler.sample(p0, iterations=max_n, progress=True):
-#     # Only check convergence every n_inc steps
-#     if sampler.iteration % n_inc:
-#         continue
+# Now we'll sample for up to max_n steps
+for sample in sampler.sample(p0, iterations=max_n, progress=True):
+    # Only check convergence every n_inc steps
+    if sampler.iteration % n_inc:
+        continue
     
-#     L = sampler.get_log_prob()
-#     ave_logp[index] = np.mean(L)
-#     index += 1
+    L = sampler.get_log_prob()
+    ave_logp[index] = np.mean(L)
+    index += 1
 
-# n = np.arange(1, index + 1)
-# y = ave_logp[:index]
-# plt.plot(n, y, '.')
-# plt.xlabel("number of steps")
-# plt.ylabel('mean logp')
-# plt.show()
+n = np.arange(1, index + 1)
+y = ave_logp[:index]
+plt.plot(n, y, '.')
+plt.xlabel("number of steps")
+plt.ylabel('mean logp')
+plt.show()
 
 
 def run_sampler_to_convergence(sampler, xs, nsamp):
@@ -433,26 +433,26 @@ def run_sampler_to_convergence(sampler, xs, nsamp):
 # sampler_new = run_sampler_to_convergence(sampler, p0, nsteps)
 
 #--------------------------------------------------------------------------------Sampling with MPI---------------------------------------------------------------------#
-with MPIPool() as pool:
-    if not pool.is_master():
-        pool.wait()
-        sys.exit(0)
+# with MPIPool() as pool:
+#     if not pool.is_master():
+#         pool.wait()
+#         sys.exit(0)
 
-    # Number of parameters
-    ndim = p0.shape[1]
+#     # Number of parameters
+#     ndim = p0.shape[1]
 
-    # Instantiate the sampler
-    sampler = emcee.EnsembleSampler(nwalkers, ndim, mci.logp, pool=pool)
+#     # Instantiate the sampler
+#     sampler = emcee.EnsembleSampler(nwalkers, ndim, mci.logp, pool=pool)
 
-    # Run the chains
-    np.random.seed(0)
-    nsteps = 1000
-    # state = sampler.run_mcmc(p0, nsteps, progress=True, store=True)
+#     # Run the chains
+#     np.random.seed(0)
+#     nsteps = 1000
+#     # state = sampler.run_mcmc(p0, nsteps, progress=True, store=True)
 
-    # start = time.time()
-    sampler_new = run_sampler_to_convergence(sampler, p0, nsteps)
-    # end = time.time()
-    # print(end - start)
+#     # start = time.time()
+#     sampler_new = run_sampler_to_convergence(sampler, p0, nsteps)
+#     # end = time.time()
+#     # print(end - start)
 
 # mpi_time = !mpiexec -n {ncpu} python script.py
 # mpi_time = float(mpi_time[0])
