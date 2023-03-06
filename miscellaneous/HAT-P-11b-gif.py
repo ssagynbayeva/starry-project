@@ -6,7 +6,8 @@ import matplotlib.animation as animation
 starry.config.lazy = False
 starry.config.quiet = True
 
-star = starry.Primary(starry.Map(ydeg=0, udeg=2, amp=1.0), m=0.809, r=1,theta0=106)
+map = starry.Map(ydeg=15, udeg=2,amp=1)
+star = starry.Primary(map, m=0.809, r=1,theta0=106)
 
 planet = starry.kepler.Secondary(
     starry.Map(ydeg=5, amp=5e-3),  # the surface map
@@ -20,8 +21,8 @@ planet = starry.kepler.Secondary(
     # t0=0.098,  # time of transit in days
 )
 
-star.map[1] = 0.646 # limb-darkening coefficient 
-star.map[2] = 0.048
+map[1] = 0.646 # limb-darkening coefficient 
+map[2] = 0.048
 
 star.map.show()
 
