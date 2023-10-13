@@ -1,4 +1,5 @@
 import starry
+import matplotlib.pyplot as plt
 import numpy as np
 import pymc3 as pm
 import pymc3.math as pmm
@@ -11,12 +12,18 @@ import theano
 import aesara_theano_fallback.tensor as tt
 from theano.tensor.slinalg import cholesky
 from corner import corner
+import arviz as az
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.colors import Normalize
+from mpl_toolkits.axes_grid1.inset_locator import inset_axes
+import os
+from tqdm import tqdm
 from theano.tensor.random.utils import RandomStream
-
-starry.config.quiet = True
-np.random.seed(1)
-
-
+import scipy.linalg as sl
+import scipy.stats as ss
+from mpl_toolkits.axes_grid1.inset_locator import inset_axes
+import lightkurve as lk
 
 def _cho_solve(L, b):
     return tt.slinalg.solve_upper_triangular(L.T, tt.slinalg.solve_lower_triangular(L, b))
